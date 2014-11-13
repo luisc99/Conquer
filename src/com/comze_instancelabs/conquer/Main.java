@@ -86,7 +86,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
-		
+
 		boolean continue_ = false;
 		for (Method m : pli.getArenaAchievements().getClass().getMethods()) {
 			if (m.getName().equalsIgnoreCase("addDefaultAchievement")) {
@@ -215,13 +215,13 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			final Player p = (Player) event.getEntity();
 			if (pli.global_players.containsKey(p.getName())) {
 				final Location l = p.getLocation();
-				clear(l);
+				event.getDrops().clear();
 				event.setDeathMessage(null);
 				final IArena a = (IArena) pli.global_players.get(p.getName());
 				if (a.getArenaState() == ArenaState.INGAME) {
@@ -230,27 +230,29 @@ public class Main extends JavaPlugin implements Listener {
 						Player killer = (Player) p.getKiller();
 						if (pteam.get(killer.getName()).equalsIgnoreCase("red")) {
 							if (!a.addRedPoints()) {
-								Util.teleportPlayerFixed(p, a.getSpawns().get(1));
 								Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 									public void run() {
 										if (a.getArenaState() == ArenaState.INGAME) {
+											Util.teleportPlayerFixed(p, a.getSpawns().get(1));
 											m.addGear(p.getName());
+											p.setHealth(20D);
 										}
-										clear(p.getLocation());
+										// clear(p.getLocation());
 									}
-								}, 20L);
+								}, 15L);
 							}
 						} else {
 							if (!a.addBluePoints()) {
-								Util.teleportPlayerFixed(p, a.getSpawns().get(0));
 								Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 									public void run() {
 										if (a.getArenaState() == ArenaState.INGAME) {
+											Util.teleportPlayerFixed(p, a.getSpawns().get(0));
 											m.addGear(p.getName());
+											p.setHealth(20D);
 										}
-										clear(p.getLocation());
+										// clear(p.getLocation());
 									}
-								}, 20L);
+								}, 15L);
 							}
 						}
 						p.sendMessage(ChatColor.RED + "You have been killed by " + ChatColor.DARK_RED + killer.getName() + ChatColor.RED + ".");
@@ -258,7 +260,7 @@ public class Main extends JavaPlugin implements Listener {
 							a.getClass().getMethod("onEliminated", String.class);
 							a.onEliminated(p.getName());
 						} catch (NoSuchMethodException e) {
-							System.out.println("Please update your MinigamesLib version to work with this Conquer version!");
+							System.out.println("Please update your MinigamesLib version for it to work with this Conquer version!");
 						}
 					}
 				}

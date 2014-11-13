@@ -1,5 +1,6 @@
 package com.comze_instancelabs.conquer;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +14,7 @@ public class IArenaListener extends ArenaListener {
 	}
 
 	@Override
+	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		//
 	}
