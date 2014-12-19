@@ -129,21 +129,28 @@ public class IArena extends Arena {
 
 	public void updateBeacons() {
 		for (CheckPoint cp : this.cps) {
+			byte col = (byte) 0;
+			if (cp.wasred) {
+				col = (byte) 14;
+			} else if (cp.wasblue) {
+				col = (byte) 11;
+			}
 			for (String p_ : this.getAllPlayers()) {
 				Player p = Bukkit.getPlayer(p_);
 				if (p != null) {
-					spawnBeacon(p, cp.getCenter().clone());
+					spawnBeacon(p, cp.getCenter().clone(), col);
 				}
 			}
 		}
 	}
 
-	public void spawnBeacon(Player player, Location loc) {
-		player.sendBlockChange(loc, Material.BEACON, (byte) 0);
+	public void spawnBeacon(Player player, Location loc, byte col) {
+		player.sendBlockChange(loc.clone(), Material.STAINED_GLASS, col);
+		player.sendBlockChange(loc.clone().add(0D, -1D, 0D), Material.BEACON, (byte) 0);
 		for (int x = -1; x < 2; x++) {
 			for (int z = -1; z < 2; z++) {
 				try {
-					player.sendBlockChange(loc.clone().add(x, -1, z), Material.DIAMOND_BLOCK, (byte) 0);
+					player.sendBlockChange(loc.clone().add(x, -2D, z), Material.DIAMOND_BLOCK, (byte) 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

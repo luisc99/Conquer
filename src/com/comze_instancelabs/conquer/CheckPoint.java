@@ -139,6 +139,23 @@ public class CheckPoint {
 					a.redcp--;
 				}
 				a.bluecp++;
+				if (plugin.pconqueredcps.containsKey(conquerer)) {
+					plugin.pconqueredcps.put(conquerer, plugin.pconqueredcps.get(conquerer) + 1);
+				} else {
+					plugin.pconqueredcps.put(conquerer, 1);
+				}
+				int temp = 0;
+				if (plugin.getConfig().isSet("tempconquers." + conquerer)) {
+					temp = plugin.getConfig().getInt("tempconquers." + conquerer);
+				}
+				plugin.getConfig().set("tempconquers." + conquerer, temp + 1);
+				plugin.saveConfig();
+				if (plugin.getConfig().getInt("tempconquers." + conquerer) > 99) {
+					plugin.pli.getArenaAchievements().setAchievementDone(conquerer, "capture_hundred_checkpoints_all_time", false);
+				}
+				if (plugin.pconqueredcps.get(conquerer) > 2) {
+					plugin.pli.getArenaAchievements().setAchievementDone(conquerer, "capture_three_checkpoints_in_a_game", false);
+				}
 				plugin.spawnFirework(this.getCenter(), Color.BLUE);
 				if (a.bluecp > plugin.getAllCheckPoints(a.getName()) - 1) {
 					for (String p_ : a.getAllPlayers()) {
