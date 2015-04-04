@@ -63,9 +63,8 @@ public class IArenaScoreboard extends ArenaScoreboard {
 	@Override
 	public void removeScoreboard(String arena, Player p) {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
-		Scoreboard sc = manager.getNewScoreboard();
-		sc.clearSlot(DisplaySlot.SIDEBAR);
-		p.setScoreboard(sc);
+		Scoreboard main = manager.getMainScoreboard();
+		p.setScoreboard(main);
 	}
 
 }
